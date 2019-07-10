@@ -1,0 +1,136 @@
+binary_search
+ 二分查找三兄弟:
+  bool binary_search(T* st, T* en,const T& num); 返回是否存在这个数
+  T* lower_bound(T* st, T* en,const T& num); 返回等于这个数的第一个位置
+  T* upper_bound(T* st, T* en,const T& num); 返回等于这个数的最后一个位置
+ 对于后两个函数，如果未能找到对应的数，就会返回第一个大于这个数的数的位置。另外，可以指定比较函数cmp。
+-----------------------------------------------------------
+time.h / assert.h
+  clock_t ST,EN;  定义两个时间变量
+  ST=clock();  获取时间
+  use = (double)(end - begin) / CLOCKS_PER_SEC; 计算消耗时间
+  assert(bool_expression) 判断布尔值真假，若假返回RE
+-----------------------------------------------------------
+vector
+  iterator it=unique(a.begin,a.end()); a.erase(it,a.end()); 去重
+  a.sort(a.begin(),a.end(),cmp) 排序
+  a.pop_back() 出栈
+  a.erase(it) 删除迭代器it指向的元素
+-----------------------------------------------------------
+double
+  ceil():向上取整(向正无穷取整)
+  floor():向下取整(向负无穷取整)
+  round():数值四舍五入
+  fix():向下取整(向0取整)
+string
+  i=stoi(s) 转为int
+  l=stoll(s) 转为long long
+  s=to_string(i) 数字(类型不限)转为string
+  s.substr(pos,len) 取子串，另外有: s.substr(pos);表示取到末尾
+  s.replace(pos,n,s1) 替换子串
+  s.pop_back(); 舍弃末尾字符
+  reverse(s.begin(),s.end())将s首尾翻转
+-----------------------------------------------------------
+priority_queue
+  a.push(x); a.pop(); a.top(); 略
+  重载比较函数方法:
+  bool operator <(const T &a,const T &b)
+  {return ...}
+  自定义比较函数：
+  priority_queue<T a, vector<T>, Mycmp>//注意vector<T>不能漏掉
+  //Mycmp是自定义重载了()的类
+-----------------------------------------------------------
+stack
+  stack<int, vector<int>> stk; 定义一个栈
+  a.push(x); a.pop(); a.top(); 略
+-----------------------------------------------------------
+list
+  a.size(); a.push_front(x); a.pop_front(); a.push_back(x); a.pop_back(); 略
+  a.insert(it,x); 在it的前面插入一个x
+  a.splice(it,b); 把b(也是一个list)移动到a的迭代器it前面的位置，并清空b!
+  常用方法: a.splice(a.end(), b);
+  a.merge(b); 若a,b是有序的，那么可以使用这个函数将两个有序队列合并为一个，注意b会被清空
+  其他用法除了随机访问外，均与vector相同
+-----------------------------------------------------------
+deque
+  a.push_back(x) 队尾插入元素
+  a.push_front(x) 队头插入元素
+  a.pop_back() 队尾弹出元素
+  a.pop_front() 队头弹出元素
+  a.front() 返回队头元素
+  a.back() 返回队尾元素
+  a.empty() 返回是否为空
+  a.clear() 清空内存
+-----------------------------------------------------------
+set/multiset 前者不允许重复，后者允许重复，默认从小到大
+  重点：大小比较函数!!!!
+  struct T
+  {
+    long key,a,b,c, ... ;
+    bool operator < (const T &b) const
+    {return key<b.key;}
+  };
+  set<T> a;//假设a的类型为T，比较函数中返回“小于”判断
+
+  set<int>::iterator it; 定义一个迭代器
+  x=*it; 将it指向的元素赋值给x
+  it=a.begin() 指向第一个元素
+  it=a.end() 指向最后一个元素
+  it=a.lower_bound(x) 指向大于等于x的第一个元素（注意不是小于），若不存在则返回a.end()
+  it=a.upper_bound(x) 指向大于x的第一个元素，若不存在则返回a.end()
+  it=a.find(x) 指向第一个等于x的元素，若不存在则返回a.end()
+  a.insert(x) 插入x
+  a.count(x) 返回a中等于x的元素个数
+  a.size() 返回a的元素个数
+  a.clear() 清空内存
+  重点：删除操作（对于multiset）!!!!
+  a.erase(x) 删除a中 所有 等于x的元素
+  it=a.find(x);
+  if (it!=a.end()) a.erase(it); 仅删除a中 一个 等于x的元素
+-----------------------------------------------------------
+map/multimap 前者不允许重复，后者允许重复
+  map<int,int> a; 前者为key，后者为元素值
+  自定义大小比较与set一致
+  迭代器的定义和查找操作与set一致
+
+  x=it->first; y=it->second; 分别将key与对应元素赋值给x和y
+  a.insert(make_pair(x,y)); 插入key为x，元素值为y的一个pair
+  a[x]=y; 插入的另一种写法
+  删除操作与set一致
+  重要操作：键值访问
+  若a.find(key)!=a.end()，则可以用如下方式访问:
+   y=a[key];  <=>   it=a.find(key),y=it->second;
+-----------------------------------------------------------
+bitset
+  bitset<200000> bit;  定义一个20w长度的bitset
+  s="100111"; bitset<200000> bit(s); 定义一个bitset并赋初值为s(前面补0)。注意这是字符串参与bitset赋值的唯一方法，定义后就不能赋值字符串类型了(int型照常可以)。
+  bit[k]  二进制第k位(对应于2^k,最低位为第0位)
+  bit可以看作一个数字进行二进制操作，例如：
+     bit=0;
+     bit=bit<<1;
+     bit=bit^(bit<<1);
+  bit.count() 返回bit中有多少位1
+  bit.to_ulong() 转换为10进制，返回一个unsigned long类型数字
+  bit.none() 返回bit是否是0
+-----------------------------------------------------------
+unordered_map 哈希神器
+  unordered_map<string,int> h; 定义一个哈希表h
+  h.insert(make_pair(s,id)); 插入一个s，对应于id
+  h[s]=id; 插入的另一种写法
+  unordered_map<string,int>::iterator it;
+  h.clear(); 清空h
+  h.erase(s); 在h中清除一个s
+  it=h.find(s); 在h中寻找s，若不存在则返回h.end();
+  it->first 第一个元素 it->second 第二个元素
+ 重点：自定义类的hash
+  struct C{
+	int a,b,c;
+	bool operator ==(const C &x)const {return a==x.a&&b==x.b&&c==x.c;}//必须重载==函数
+  };
+  hash<int> HLL;
+  struct MyHash{
+	size_t operator()(const C &x)const {
+		return ((HLL(x.a)^(HLL(x.b)<<1))>>1)^(HLL(x.c)<<1);//移位异或法
+	}
+  };
+  unordered_map<C,int,MyHash> H;//定义时加一个MyHash即可
