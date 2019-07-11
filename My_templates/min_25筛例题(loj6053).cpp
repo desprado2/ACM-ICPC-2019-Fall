@@ -1,14 +1,3 @@
-#include <bits/stdc++.h>
-#pragma GCC optimize(3)
-#define pb(a) push_back(a)
-#define mp(a,b) make_pair(a,b)
-#define mem(a,b) memset(a,b,sizeof(a))
-#define dbg() system("pause")
-#define clr(a,n)\
- for(int i=0; i<n; i++)a[i].clear();
-#define N 200005
-using namespace std;
-
 typedef long long ll;
 const ll M=1e9+7;
 
@@ -17,9 +6,9 @@ int i,j,k,cnt,pr[N/10];
 bool fl[N];
 void sieve(){
     fl[1]=1;
-    for (i=2; i<=sqrt(n); i++){
+    for (int i=2; i<=sqrt(n); i++){
         if (!fl[i]) pr[++cnt]=i;
-        for (j=1; j<=cnt&&pr[j]*i<=sqrt(n); j++){
+        for (int j=1; j<=cnt&&pr[j]*i<=sqrt(n); j++){
             fl[i*pr[j]]=1;
             if (i%pr[j]==0) break;
         }
@@ -44,7 +33,7 @@ ll S(int x,int j){
 int min_25(){
     ll i,j;
     for (i=1; i<=n; i=n/(n/i)+1)
-        num[++c]=n/i, n/i<N?id1[n/i]=c:id2[n/(n/i)]=c;//id1,id2���ڹ�ϣ
+        num[++c]=n/i, n/i<N?id1[n/i]=c:id2[n/(n/i)]=c;//unordered_map太慢,改用两个数组id1,id2用于哈希
     for (i=1; i<=cnt; i++)
         sum1[i]=sum1[i-1]+1, sum2[i]=(sum2[i-1]+pr[i])%M;
     for (i=1; i<=c; i++)//g1(x)=1, g2(x)=x
@@ -56,13 +45,5 @@ int min_25(){
             g2[i]=(g2[i] - pr[j]*g2[H(num[i]/pr[j])]%M + pr[j]*sum2[j-1]%M +M)%M;
     for (i=1; i<=c; i++)
         g[i]=(g2[i]-g1[i]+(num[i]>=2?2:0) +M)%M;//f(p)=p-1, exception:f(2)=3
-    return S(1,1)+1;
-}
-int main()
-{
-    cin.tie(0), ios::sync_with_stdio(false);
-
-    cin>>n, sieve();
-    cout<<min_25();
-    return 0;
+    return S(1,1)+1; //f(1)=1
 }
