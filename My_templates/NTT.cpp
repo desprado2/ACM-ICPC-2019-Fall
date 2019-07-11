@@ -1,16 +1,4 @@
-#include <bits/stdc++.h>
-#pragma GCC optimize(3)
-#define pb(a) push_back(a)
-#define mp(a,b) make_pair(a,b)
-#define mem(a,b) memset(a,b,sizeof(a))
-#define dbg() system("pause")
-#define clr(a,n)\
- for(int i=0; i<n; i++)a[i].clear();
-#define N 100005
-using namespace std;
-
 typedef long long ll;
-typedef pair<int,int> pii;
 const ll M=998244353;
 const ll G=3;
 
