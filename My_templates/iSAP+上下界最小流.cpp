@@ -39,8 +39,8 @@ int dfs(int u,int cur)//cur:当前允许最大流量
 int sap(int s,int t,int n)//从s到t，共有n个点
 {
 	st=s,en=t,V=n;
-	memset(dis,0,sizeof(dis)); memset(gap,0,sizeof(gap));//!!!
-	gap[1]=V;//!!!
+	memset(dis,0,sizeof(dis)); memset(gap,0,sizeof(gap));
+	gap[1]=V;
 	int ans=0;
 	while (dis[st]<V) ans+=dfs(st,INT_MAX);
 	return ans;
@@ -51,8 +51,8 @@ void work()
 		if (du[i]>0) adde(SS,i,du[i],l,e);
 		else if (du[i]<0) adde(i,ST,-du[i],l,e);
 	sap(SS,ST,n+4);
-	adde(T,S,inf*100,l,e);//*100!!!!
+	adde(T,S,inf<<2,l,e);
 	sap(SS,ST,n+4);
 	cout<<e[cnt-1].val<<endl;
-		//实际上，最小流=S所有出边的流量+S所有出边的下界；此处S出边下界均为0，所以偷懒地直接等于S所有出边的流量，即T->S边的流量
+//实际上，最小流=S所有出边的流量+S所有出边的下界；若S出边下界均为0，可以偷懒地直接等于S所有出边的流量，即T->S边的流量
 }
