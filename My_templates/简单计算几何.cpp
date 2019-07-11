@@ -1,55 +1,49 @@
-#include<bits/stdc++.h>
-#pragma GCC optimize(3)
-#define pb(a) push_back(a)
-#define mp(a,b) make_pair(a,b)
-#define mem(a,b) memset(a,b,sizeof(a))
-const double eps=1e-6;
-using namespace std;
-
+const double eps=1e-8;
 typedef long double ld;
 
 struct Point{
     double x,y;
     Point(double x=0,double y=0):x(x),y(y){}
-    Point operator-(const Point& P){return {x-P.x, y-P.y};}
+    Point operator-(const Point& P)const{return {x-P.x , y-P.y};}
+    double operator^(const Point& P)const{return x*P.y - y*P.x;}
+    double operator*(const Point& P)const{return x*P.x + y*P.y;}
 };
-struct Line{//Ïß¶Î
+struct Line{//çº¿æ®µ
     Point s,e;
     ld k,b;
     void calc(){(e.x!=s.x)?(k=ld(e.y-s.y)/ld(e.x-s.x), b=s.y-k*s.x):(k=1e18,b=s.x);}
 };
-bool eq(double a,double b){return fabs(a-b)<eps;}//¾«¶ÈÔÊĞí·¶Î§ÄÚÏàµÈ
+bool eq(double a,double b){return fabs(a-b)<eps;}//ç²¾åº¦å…è®¸èŒƒå›´å†…ç›¸ç­‰
 double dist(Point a,Point b){return sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));}
-double cross(Point vec1,Point vec2){return vec1.x*vec2.y-vec1.y*vec2.x;}//Á½¸öÏòÁ¿µÄ²æ»ı
 
-bool chkIntersect(Point a,Point b,Point c,Point d) //ÇóÁ½Ïß¶ÎABºÍCDÊÇ·ñÏà½»
+bool chkIntersect(Point a,Point b,Point c,Point d) //æ±‚ä¸¤çº¿æ®µABå’ŒCDæ˜¯å¦ç›¸äº¤
 {
 	double u,v,w,z;
-	u=cross(c-a,b-a), v=cross(d-a,b-a);
-	w=cross(a-c,d-c) ,z=cross(b-c,d-c);
+	u=(c-a)^(b-a), v=(d-a)^(b-a);
+	w=(a-c)^(d-c) ,z=(b-c)^(d-c);
 	return (u*v<=0&&w*z<=0 && (u==0)+(v==0)+(w==0)+(z==0)<4);
 }
 
-Point intersect(Point a,Point b,Point c,Point d)//ÇóÖ±ÏßABºÍÖ±ÏßCDµÄ½»µã
+Point intersect(Point a,Point b,Point c,Point d)//æ±‚ç›´çº¿ABå’Œç›´çº¿CDçš„äº¤ç‚¹
 {
-    double a1=a.y-b.y, b1=b.x-a.x, c1=-cross(a,b);
-    double a2=c.y-d.y, b2=d.x-c.x, c2=-cross(c,d);
+    double a1=a.y-b.y, b1=b.x-a.x, c1=-(a^b);
+    double a2=c.y-d.y, b2=d.x-c.x, c2=-(c^d);
     return Point((c1*b2-c2*b1)/(a1*b2-a2*b1) , (a1*c2-a2*c1)/(a1*b2-a2*b1));
 }
-double Lambda(Line a, Line b){//ÓÃa.s + lambda*(a.t+a.s) ±íÊ¾Ïß¶ÎaºÍbµÄ½»µã,ÓĞÀûÓÚÕûÀí½»µã×ø±ê
-    return cross(a.s-b.s,b.s-b.e)/cross(a.s-a.e,b.s-b.e);
+double Lambda(Line a, Line b){//ç”¨a.s + lambda*(a.t+a.s) è¡¨ç¤ºçº¿æ®µaå’Œbçš„äº¤ç‚¹,æœ‰åˆ©äºæ•´ç†äº¤ç‚¹åæ ‡
+    return ((a.s-b.s)^(b.s-b.e))/((a.s-a.e)^(b.s-b.e));
 }
-bool coline(Point a,Point b,Point c) //ÇóCÊÇ·ñÔÚÏß¶ÎABÉÏ
+bool coline(Point a,Point b,Point c) //æ±‚Cæ˜¯å¦åœ¨çº¿æ®µABä¸Š
 {
-	return (eq(cross(a-c,b-c) , 0)
+	return (eq((a-c)^(b-c) , 0)
           &&(c.y-a.y)*(c.y-b.y)<=0 && (c.x-a.x)*(c.x-b.x)<=0);
 }
 
-int inside(Point u,vector<Point> &poly)//ÇóÒ»¸öµãÊÇ·ñÔÚ¶à±ßĞÎÄÚ²¿
+int inside(Point u,vector<Point> &poly)//æ±‚ä¸€ä¸ªç‚¹æ˜¯å¦åœ¨å¤šè¾¹å½¢å†…éƒ¨
 {
 	int i,n=poly.size(),cnt=0;
 	Point v(u.x+5001,u.y+1);
-	//Èç¹ûN,M¾ùĞ¡ÓÚ5000,Ôò¶¨¡°½çÍâµã¡±×ø±êÊÇ5001,ÕâÑùÒ»ÌõÖ±Ïß±Ø²»´©¹ıÄÚ²¿µã
+	//å¦‚æœN,Må‡å°äº5000,åˆ™å®šâ€œç•Œå¤–ç‚¹â€åæ ‡æ˜¯5001,è¿™æ ·ä¸€æ¡ç›´çº¿å¿…ä¸ç©¿è¿‡å†…éƒ¨ç‚¹
 	for (i=0; i<n; i++)
 	{
 		if (coline(poly[i],poly[(i+1)%n],u))return 2;
@@ -58,13 +52,13 @@ int inside(Point u,vector<Point> &poly)//ÇóÒ»¸öµãÊÇ·ñÔÚ¶à±ßĞÎÄÚ²¿
 	if (cnt%2!=0) return 1; else return 0;
 }
 
-vector<Point> cp;//´æ´¢Í¹°ü
-Point O;//×İ×ø±ê×îĞ¡µã
-bool cmp(Point a,Point b){//0~pi ¼«½ÇÅÅĞò
-    double A=cross(a-O,b-O);
+vector<Point> cp;//å­˜å‚¨å‡¸åŒ…
+Point O;//çºµåæ ‡æœ€å°ç‚¹
+bool cmp(Point a,Point b){//0~pi æè§’æ’åº
+    double A=(a-O)^(b-O);
     return A>=eps || eq(A,0)&&dist(O,a)<dist(O,b);
 }
-void convex_hull(vector<Point>& poly)//Í¹°ü
+void convex_hull(vector<Point>& poly)//å‡¸åŒ…
 {
     int i,t=0,n=poly.size();
     O.y=1e10;
@@ -80,18 +74,18 @@ void convex_hull(vector<Point>& poly)//Í¹°ü
     }
     cp.pb(poly[0]), cp.pb(poly[1]);
     for (i=2; i<n; i++){
-        while (cp.size()>=2 && cross(*(cp.end()-1) - *(cp.end()-2) , poly[i] - *(cp.end()-2))<=0)
+        while (cp.size()>=2 && ((*(cp.end()-1) - *(cp.end()-2)) ^ (poly[i] - *(cp.end()-2)))<=0)
             cp.pop_back();
         cp.pb(poly[i]);
     }
 }
 
-double area(vector<Point>& poly)//¶à±ßĞÎÇóÃæ»ı
+double area(vector<Point>& poly)//å¤šè¾¹å½¢æ±‚é¢ç§¯
 {
     int n=poly.size(), i;
     double ret=0;
     for (i=0; i<n; i++)
-        ret+=cross(poly[i], poly[(i+1)%n])/2.0;
+        ret+=(poly[i] ^ poly[(i+1)%n])/2.0;
     return ret;
 }
 
@@ -99,7 +93,7 @@ bool operator<(Point a,Point b){return a.x<b.x||a.x==b.x&&a.y<b.y;}
 bool operator==(Point a,Point b){return a.x==b.x&&a.y==b.y;}
 bool cmpL(Line a,Line b){return a.k>b.k || a.k==b.k&&a.b>b.b || a.k==b.k&&a.b==b.b&&a.s<b.s || a.k==b.k&&a.b==b.b&&a.s==b.s&&a.e<b.e;}
 vector<Line> rd;
-void combineCollinear(vector<Line>& l)//ºÏ²¢¹²ÏßÇÒÏà½»µÄÏß¶Î
+void combineCollinear(vector<Line>& l)//åˆå¹¶å…±çº¿ä¸”ç›¸äº¤çš„çº¿æ®µ
 {
     int n=l.size(), i;
     sort(l.begin(), l.end(), cmpL);
@@ -114,4 +108,3 @@ void combineCollinear(vector<Line>& l)//ºÏ²¢¹²ÏßÇÒÏà½»µÄÏß¶Î
     }
     rd.pb(tmp);
 }
-int main(){}
