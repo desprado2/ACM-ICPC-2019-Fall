@@ -9,7 +9,6 @@ using namespace std;
 
 typedef unsigned int uint;
 typedef long long LL;
-
 int n,m,i,j,k,cnt;
 uint a[N];
 struct node{
@@ -37,7 +36,7 @@ void dfs(int dep,int remain,uint now)
     LL sum1=0;
     for (int i=0; i<A.size(); i++)
         sum1+=(1ll*tr[tr[A[i]].s[0]].cnt*tr[tr[B[i]].s[1]].cnt + 1ll*tr[tr[A[i]].s[1]].cnt*tr[tr[B[i]].s[0]].cnt)/((A[i]==B[i])?2:1);
-        //²»ÒªÍüÁË¿¼ÂÇ/2µÄÇé¿ö,ÏÂÍ¬
+        //ä¸è¦å¿˜äº†è€ƒè™‘/2çš„æƒ…å†µ,ä¸‹åŒ
 
     if (sum1<remain){
         vector<int> tA=A,tB=B;
