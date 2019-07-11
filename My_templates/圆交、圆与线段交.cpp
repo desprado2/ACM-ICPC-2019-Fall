@@ -20,7 +20,9 @@ int dcmp(ld d){
 struct Point{
     ld x,y;
     bool operator==(const Point& P)const {return dcmp(x-P.x)==0 && dcmp(y-P.y)==0;}
-    Point operator-(const Point& P)const {return {x-P.x, y-P.y};}
+    Point operator-(const Point& P)const {return {x-P.x , y-P.y};}
+    ld operator^(const Point& P)const {return x*P.y - y*P.x;}
+    ld operator*(const Point& P)const {return x*P.x + y*P.y;}
 };
 struct circle{
     ld x,y,r;
@@ -32,20 +34,18 @@ ld Acos(ld x){
 }
 ld Sqrt(ld x){return x<0?0:sqrt(x);}
 ld sqr(ld x){return x*x;}
-ld dist(Point a,Point b){return Sqrt(sqr(a.x-b.x) + sqr(a.y-b.y));}
-ld dot(Point vec1,Point vec2){return vec1.x*vec2.x + vec1.y*vec2.y;}
-ld cross(Point vec1,Point vec2){return vec1.x*vec2.y - vec2.x*vec1.y;}
+ld dist(Point a,Point b){return Sqrt((a-b)*(a-b));}
 
-int query(circle a,circle b){//ÅĞ¶ÏÁ½Ô²¹ØÏµ
-    if (a.x==b.x && a.y==b.y && a.r==b.r) return -2;//ÏàµÈ
+int query(circle a,circle b){//åˆ¤æ–­ä¸¤åœ†å…³ç³»
+    if (a.x==b.x && a.y==b.y && a.r==b.r) return -2;//ç›¸ç­‰
     ld D=sqr(a.x-b.x)+sqr(a.y-b.y);
-    if (D-sqr(a.r+b.r)>0) return 0;//ÏàÀë,×¢ÒâÕâÀï²»ÒªÓÃdcmp()
+    if (D-sqr(a.r+b.r)>0) return 0;//ç›¸ç¦»,æ³¨æ„è¿™é‡Œä¸è¦ç”¨dcmp()
     if (sqr(a.r-b.r)-D>=0)
-        return a.r<b.r?-1:1;//-1: aÄÚº¬ÓÚb;  1: bÄÚº¬ÓÚa
-    return 2;//Ïà½»»òÕßÍâÇĞ
+        return a.r<b.r?-1:1;//-1: aå†…å«äºb;  1: bå†…å«äºa
+    return 2;//ç›¸äº¤æˆ–è€…å¤–åˆ‡
 }
 
-ld cirCross(circle a,circle b){//ÇóÁ½Ô²½»Ãæ»ı
+ld cirCross(circle a,circle b){//æ±‚ä¸¤åœ†äº¤é¢ç§¯
     int t=query(a,b);
     if (t==0) return 0;
     if (t==-1) return pi*sqr(a.r);
@@ -56,7 +56,7 @@ ld cirCross(circle a,circle b){//ÇóÁ½Ô²½»Ãæ»ı
     return sqr(r1)*ang1 + sqr(r2)*ang2 - D*r1*sin(ang1);
 }
 
-//ÒÔÏÂÄ£¿éÓÃÀ´ÇóÒ»¸öÔ²µÄ¼¯ºÏÖĞËùÓĞµÄÁ½Á½½»µã
+//ä»¥ä¸‹æ¨¡å—ç”¨æ¥æ±‚ä¸€ä¸ªåœ†çš„é›†åˆä¸­æ‰€æœ‰çš„ä¸¤ä¸¤äº¤ç‚¹
 hash<ll> HLL;
 struct myhash{
     size_t operator()(const Point& P)const{
@@ -65,9 +65,9 @@ struct myhash{
     }
 };
 unordered_map<Point,int,myhash> H;
-Point pts[M];//ÓÃÀ´´æ´¢Ô²µÄ½»µã
+Point pts[M];//ç”¨æ¥å­˜å‚¨åœ†çš„äº¤ç‚¹
 int cnt;
-void add(Point& P){//Ìí¼ÓÒ»¸öµã
+void add(Point& P){//æ·»åŠ ä¸€ä¸ªç‚¹
     if (!H.count(P)) pts[++cnt]=P,H[P]=cnt;
 }
 void getIntersect(circle C[], int n){
@@ -86,17 +86,17 @@ struct Line{
     Point s,e;
 };
 struct seg{ld l,r;};
-seg tmp;//Õâ¸ötmp×¨ÃÅÓÃÀ´¼ÇÂ¼CILµÄ½á¹û
+seg tmp;//è¿™ä¸ªtmpä¸“é—¨ç”¨æ¥è®°å½•CILçš„ç»“æœ
 
-ld distL(Point P,Line l){//·µ»ØµãPµ½Ö±ÏßlµÄ¾àÀë
+ld distL(Point P,Line l){//è¿”å›ç‚¹Påˆ°ç›´çº¿lçš„è·ç¦»
     ld D=dist(l.e,l.s);
-    return D==0?0:fabs(cross(l.e-l.s,P-l.s)) / D;
+    return D==0?0:fabs((l.e-l.s)^(P-l.s)) / D;
 }
-ld secant(ld r,ld d,ld l){//ÇóÒ»ÌõÆğµã¾àÔ²ĞÄÎªl, Ô²ĞÄµ½Ö±Ïß¾àÀëdµÄ¸îÏß³¤¶È
+ld secant(ld r,ld d,ld l){//æ±‚ä¸€æ¡èµ·ç‚¹è·åœ†å¿ƒä¸ºl, åœ†å¿ƒåˆ°ç›´çº¿è·ç¦»dçš„å‰²çº¿é•¿åº¦
     return Sqrt(sqr(l)-sqr(d)) - Sqrt(sqr(r)-sqr(d));
 }
 bool CIL(circle c, Line l){
-//ÇóÔ²ÓëÏß¶ÎÊÇ·ñÏà½»£¬ÈôÏà½»·µ»ØÏß¶ÎÉÏÁ½¸ö½»µãµÄÎ»ÖÃ£¬ÒÔ¾àÀëÏß¶ÎÆğµãµÄ³¤¶È¼Æ
+//æ±‚åœ†ä¸çº¿æ®µæ˜¯å¦ç›¸äº¤ï¼Œè‹¥ç›¸äº¤è¿”å›çº¿æ®µä¸Šä¸¤ä¸ªäº¤ç‚¹çš„ä½ç½®ï¼Œä»¥è·ç¦»çº¿æ®µèµ·ç‚¹çš„é•¿åº¦è®¡
     Point O={c.x,c.y};
     ld D1=dist(l.s, O), D2=dist(l.e, O), r=c.r;
     if (D1<=r&&D2<=r) {
@@ -114,7 +114,7 @@ bool CIL(circle c, Line l){
         return 1;
     }
     else{
-        ld c1=dot(l.e-l.s , O-l.s), c2=dot(l.s-l.e , O-l.e), D=distL(O,l);
+        ld c1=(l.e-l.s)*(O-l.s), c2=(l.s-l.e)*(O-l.e), D=distL(O,l);
         if (D<r && c1>0 && c2>0){
             tmp.l=secant(r,D,D1);
             tmp.r=dist(l.s,l.e) - secant(r,D,D2);
