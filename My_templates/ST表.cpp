@@ -1,4 +1,5 @@
-int Log2[N],st[N][20];//ST table
+int Log2[N],st[N][maxlog];//ST表
+//log2(1e5)=16.6, log2(1e6)=19.9
 void init(){
     for (i=1,k=0; i<=n; i<<=1,k++)
         for (j=i; j<i<<1 && j<=n; j++)
