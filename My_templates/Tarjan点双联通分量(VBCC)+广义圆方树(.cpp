@@ -2,7 +2,7 @@ vector<int> e[N];
 
 int now,cbl,dfn[N],low[N];
 vector<int> bcc[N];
-stack<int> stk;
+stack<int, vector<int>> stk;
 void tarjan(int u,int fa)
 {
     dfn[u]=low[u]=++now;
