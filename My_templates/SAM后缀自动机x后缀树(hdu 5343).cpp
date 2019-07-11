@@ -1,22 +1,8 @@
-#include <bits/stdc++.h>
-#pragma GCC optimize(3)
-#define pb push_back
-#define mp make_pair
-#define mem(a,b) memset(a,b,sizeof(a))
-#define dbg() system("pause")
-#define clr(a,n)\
- for(int i=0; i<n; i++)a[i].clear();
-#define N 100005
-using namespace std;
-
-typedef unsigned long long LL;
-typedef pair<int,int> Pii;
-
 #define root 0
 struct SAM{
     int e[N*4][26];
     int lst,cur,link[N*4],len[N*4],cnt;
-    char lstc[N*4];//lstc½ö½öÓÃÓÚºó×ºÊ÷£¬±íÊ¾Õâ¸ö½ÚµãµÄ¿ªÍ·×ÖÄ¸(ÔÚ·´Ğò×Ô¶¯»úÉÏÊÇ½áÎ²)
+    char lstc[N*4];//lstcä»…ä»…ç”¨äºåç¼€æ ‘ï¼Œè¡¨ç¤ºè¿™ä¸ªåç¼€æ ‘èŠ‚ç‚¹çš„å¼€å¤´å­—æ¯(ä¹Ÿå°±æ˜¯ååºè‡ªåŠ¨æœºä¸Šçš„ç»“å°¾)ï¼Œç”¨äºç»Ÿè®¡åç¼€æ ‘ä¸Šçš„ä¸€äº›ä¿¡æ¯
     bool isleaf[N*4];
 
     SAM(){mem(isleaf,0), mem(len,0), cnt=0;}
@@ -44,51 +30,3 @@ struct SAM{
         }
     }
 };
-
-int cnt[N*4],g[26];
-vector<int> son[N*4];
-void tra(int u, const SAM& B){
-    cnt[u]=B.len[u]-B.len[B.link[u]];
-    for (int v:son[u]){
-        tra(v,B);
-        cnt[u]+=cnt[v];
-    }
-    if (B.link[u]==root)
-        g[B.lstc[u]-'a']=cnt[u];
-}
-LL f[N*4];
-void dfs(int u, const SAM& A){
-    if (f[u]) return;
-    for (char c='a'; c<='z'; c++)
-        if (!A.e[u][c-'a']) f[u]+=g[c-'a'];
-        else {
-            int v=A.e[u][c-'a'];
-            dfs(v,A), f[u]+=f[v];
-        }
-    f[u]++;
-}
-SAM A,B;
-char aa[N],bb[N];
-int main()
-{
-    cin.tie(0), ios::sync_with_stdio(false);
-    int T; cin>>T;
-    while (T--){
-        string a,b;
-        cin>>a>>b;
-
-        A.clear(), B.clear();
-        reverse(b.begin(), b.end());
-        A.build(a), B.build(b);
-
-        mem(cnt,0); clr(son,B.cnt+5); mem(g,0);
-        for (int i=1; i<=B.cnt; i++)
-            son[B.link[i]].pb(i);
-        tra(root,B);
-
-        mem(f,0);
-        dfs(root,A);
-        cout<<f[0]<<endl;
-    }
-	return 0;
-}
