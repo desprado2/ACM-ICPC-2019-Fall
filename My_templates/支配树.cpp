@@ -44,6 +44,7 @@ void build(){//构造支配树
         son[idom[u]].pb(u);
     }
 }
+
 void init(int n){
     for (int i=1; i<=n; i++)
         dfn[i]=0, S[i].fa=S[i].eval=semi[i]=i,
