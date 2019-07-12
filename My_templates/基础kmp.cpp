@@ -1,6 +1,6 @@
 int kmp(const string& s,const string& pat)
 {
-	int n=s.size(),m=pat.size(),j,k,next[N];
+	int n=s.size(),m=pat.size(),j,k,next[m+5];
 	next[0]=0;
 	for (j=1,k=0; j<m; j++)
 	{
