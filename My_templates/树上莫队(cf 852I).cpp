@@ -1,9 +1,9 @@
+//本程序是一个示例
 #include<bits/stdc++.h>
 #pragma GCC optimize(3)
-#define pb(a) push_back(a)
-#define mp(a,b) make_pair(a,b)
+#define pb push_back
+#define mp make_pair
 #define mem(a,b) memset(a,b,sizeof(a))
-#define dbg() system("pause")
 #define N 100005
 using namespace std;
 
