@@ -4,9 +4,10 @@ int def[M];
 void dye(int u){//2-SAT前决定一些点的选择
     dyed[u]=1;
     def[u]=1,def[u^1]=-1;
-    for (int v:e[u])
+    for (int v:e[u]){
+	if (def[v]==-1) noans=1;
         if (!dyed[v]) dye(v);
-	else if (def[v]==-1) noans=1;
+    }
 }
 
 vector<int> scc[M];
@@ -22,7 +23,7 @@ void tarjan(int u)//求强联通分量
     {
         if (def[v]) continue;//在2-SAT之前已经决定了某些点的选择，那么就不能在tarjan中再访问这些点
 	//正常的SCC tarjan可以直接删掉这条语句
-        if (!dfn[v]) tarjan(stk,v), low[u]=min(low[u],low[v]);
+        if (!dfn[v]) tarjan(v), low[u]=min(low[u],low[v]);
         else if (instack[v]) low[u]=min(low[u],dfn[v]);
     }
     if (dfn[u]==low[u]){
