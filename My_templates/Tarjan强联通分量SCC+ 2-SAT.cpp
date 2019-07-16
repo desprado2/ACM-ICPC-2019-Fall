@@ -1,12 +1,11 @@
 vector<int> e[M];
-bool dyed[M],noans=0;
+bool noans=0;
 int def[M];
 void dye(int u){//2-SAT前决定一些点的选择
-    dyed[u]=1;
     def[u]=1,def[u^1]=-1;
     for (int v:e[u]){
 	if (def[v]==-1) noans=1;
-        if (!dyed[v]) dye(v);
+        if (!def[v]) dye(v);
     }
 }
 
@@ -51,8 +50,10 @@ void topo(int u)
 bool work(){
     int i;
     memset(def,0,sizeof(def));
-    for (i=1; i<=decided; i++)
-        memset(dyed,0,sizeof(dyed)), dye(start[i]);//先对已经确定选择的点染色
+    for (i=1; i<=decided; i++){
+        if (def[start[i]]==-1) noans=1;
+	if (!def[start[i]]) dye(start[i]);//先对已经确定选择的点染色
+    }
 
     memset(dfn,0,sizeof(dfn)), cbl=now=0;
     for (i=0; i<cnt*2; i++)
