@@ -101,7 +101,7 @@ void combineCollinear(vector<Line>& l)//合并共线且相交的线段
     tmp.k=tmp.b=-1e18;
     for (i=0; i<n; i++){
         if (l[i].k!=tmp.k || l[i].b!=tmp.b || tmp.e<l[i].s){
-            if (i!=1) rd.pb(tmp);
+            if (i) rd.pb(tmp);
             tmp=l[i];
         }
         if (tmp.e<l[i].e) tmp.e=l[i].e;
